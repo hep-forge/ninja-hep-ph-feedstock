@@ -1,5 +1,5 @@
 {% set versions = {
-    "0.0.0": "REPLACE_WITH_SHA256"
+    "1.2.0": "b9709aada408286b6533ac7427bab9d1364d449a9c11098c324ea0875fe9a9e1"
 } %}
 
 {% set version = environ.get('COMMIT_VERSION', None) %}
@@ -13,36 +13,52 @@ package:
   version: {{ environ.get('ANACONDA_VERSION', version)|replace("-", ".") }}
 
 source:
-  url: "https://github.com/peraro/ninja/archive/refs/tags/{{ version }}.tar.gz"   # TODO: confirm upstream's actual tag/tarball naming
+  url: "https://github.com/peraro/ninja/archive/v{{ version }}.tar.gz"
   {% if versions.get(version, None) %}
   sha256: {{ versions.get(version) }}
   {% endif %}
+  patches:
+    - posix-compliant-shell.patch
+    - update-version-number-to-v1.2.0.patch
 
 build:
+  # needs libquadmath, x86-only
+  skip: true  # [not linux]
   number: 0
   run_exports:
-    - {{ pin_subpackage(name, max_pin="x.x.x") }}
+    - {{ pin_subpackage(name, max_pin="x.x") }}
 
 requirements:
   build:
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
     - {{ stdlib('c') }}
-    - cmake
+    - {{ compiler('cxx') }}
+    - {{ compiler('gfortran') }}
+    - automake
+    - libtool
     - make
+    - pkg-config
+    - gnuconfig
   host:
-    # TODO: library dependencies
+    - oneloop
+    - looptools
   run:
-    # TODO: runtime dependencies
+    - oneloop
 
 test:
   commands:
-    - echo "TODO: a real smoke test"
+    - test -f $PREFIX/lib/libninja${SHLIB_EXT}
+    - test -f $PREFIX/include/ninja/ninja.hh
+    - test -f $PREFIX/bin/ninja-config
+    - ninja-config --help
 
 about:
   home: "https://github.com/peraro/ninja"
   license: "GPL-3.0-only"
+  license_file: COPYING
   summary: "Ninja: integrand reduction via Laurent expansion for one-loop amplitudes"
+  description: |
+    Ninja implements the Laurent-series-expansion method for one-loop
+    integrand reduction (Mastrolia, Mirabella, Peraro 2012; Peraro 2014).
 
 extra:
   recipe-maintainers:
