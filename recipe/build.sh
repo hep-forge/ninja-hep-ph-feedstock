@@ -9,6 +9,6 @@ autoreconf --install
   --with-looptools="${FLDFLAGS} -looptools -lgfortran -lquadmath" \
   FCINCLUDE="${FCINCLUDE} -I${PREFIX}/include/oneloop"
 
-NPROC=$(nproc 2>/dev/null || sysctl -n hw.ncpu)
-make -j"${NPROC}"
+# upstream's Makefile is not parallel-safe -- don't use -j
+make
 make install
