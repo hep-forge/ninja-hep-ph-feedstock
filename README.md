@@ -13,7 +13,12 @@ Ninja: integrand reduction via Laurent expansion for one-loop amplitudes
 
 ## Architectures
 
-State per architecture: see the platforms badge above or [anaconda.org/hep-forge/ninja-hep-ph](https://anaconda.org/hep-forge/ninja-hep-ph).
+| Architecture | Latest published |
+|--------------|------------------|
+| linux-amd64 (`linux-64`) | ✅ `1.2.0` |
+| linux-arm64 (`linux-aarch64`) | ✅ `1.2.0` |
+
+_As of the last feedstock render; the badges above are live._
 
 
 ## Install
