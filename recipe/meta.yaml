@@ -19,8 +19,12 @@ source:
   sha256: {{ versions.get(version) }}
   {% endif %}
   patches:
+    # Both only for 1.2.0: 1.2.1 has the POSIX test syntax and its own
+    # version number.
+    {% if version == "1.2.0" %}
     - posix-compliant-shell.patch
     - update-version-number-to-v1.2.0.patch
+    {% endif %}
 
 build:
   # needs libquadmath, x86-only
