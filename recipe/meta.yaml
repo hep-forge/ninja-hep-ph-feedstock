@@ -29,7 +29,7 @@ source:
 build:
   # needs libquadmath, x86-only
   skip: true  # [not linux]
-  number: 1
+  number: 2
   run_exports:
     - {{ pin_subpackage(name, max_pin="x.x") }}
 
@@ -45,13 +45,16 @@ requirements:
     - gnuconfig
   host:
     - oneloop
-    - looptools
   run:
     - oneloop
 
 test:
+  requires:
+    - python
   commands:
     - test -f $PREFIX/lib/libninja${SHLIB_EXT}
+    # Load with immediate binding: fails if the library has undefined symbols
+    - python -c "import ctypes, os; ctypes.CDLL(os.path.join(os.environ['PREFIX'], 'lib', 'libninja${SHLIB_EXT}'), mode=os.RTLD_NOW)"
     - test -f $PREFIX/include/ninja/ninja.hh
     - test -f $PREFIX/bin/ninja-config
     - ninja-config --help
