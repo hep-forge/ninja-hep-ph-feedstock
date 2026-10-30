@@ -29,7 +29,7 @@ source:
 build:
   # needs libquadmath, x86-only
   skip: true  # [not linux]
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage(name, max_pin="x.x") }}
 
@@ -37,7 +37,7 @@ requirements:
   build:
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    - {{ compiler('gfortran') }}
+    - {{ compiler('fortran') }}
     - automake
     - libtool
     - make
